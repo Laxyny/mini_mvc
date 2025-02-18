@@ -27,7 +27,7 @@ class UserRepository extends Repository
         $query->execute();
         $users = $query->fetchAll($this->pdo::FETCH_ASSOC);
         $usersObjects = [];
-        foreach($users as $user) {
+        foreach ($users as $user) {
             $usersObjects[] = User::createAndHydrate($user);;
         }
         return $usersObjects;
@@ -47,19 +47,18 @@ class UserRepository extends Repository
 
     public function persist(User $user)
     {
-        
-        if ($user->getId() !== null) {
-                $query = $this->pdo->prepare('UPDATE user SET first_name = :first_name, last_name = :last_name,  
-                                                    email = :email, password = :password  WHERE id = :id'
-                );
-                $query->bindValue(':id', $user->getId(), $this->pdo::PARAM_INT);
-           
 
+        if ($user->getId() !== null) {
+            $query = $this->pdo->prepare(
+                'UPDATE user SET first_name = :first_name, last_name = :last_name,  
+                                                    email = :email, password = :password  WHERE id = :id'
+            );
+            $query->bindValue(':id', $user->getId(), $this->pdo::PARAM_INT);
         } else {
-            $query = $this->pdo->prepare('INSERT INTO user (first_name, last_name, email, password) 
+            $query = $this->pdo->prepare(
+                'INSERT INTO user (first_name, last_name, email, password) 
                                                     VALUES (:first_name, :last_name, :email, :password)'
             );
-
         }
 
         $query->bindValue(':first_name', $user->getFirstName(), $this->pdo::PARAM_STR);

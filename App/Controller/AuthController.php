@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Repository\UserRepository;
+use App\Entity\User;
 
 class AuthController extends Controller
 {
@@ -16,6 +17,9 @@ class AuthController extends Controller
                         break;
                     case 'logout':
                         $this->logout();
+                        break;
+                    case 'register':
+                        $this->register();
                         break;
                     default:
                         throw new \Exception("Cette action n'existe pas : " . $_GET['action']);
@@ -71,6 +75,33 @@ class AuthController extends Controller
         session_destroy();
         //Supprime les données du tableau $_SESSION
         unset($_SESSION);
-        header ('location: index.php?controller=auth&action=login');
+        header('location: index.php?controller=auth&action=login');
+    }
+
+    protected function register()
+    {
+        $errors = [];
+
+        if (isset($_POST['registerUser'])) {
+            $userRepository = new UserRepository();
+            $user = new User();
+
+            $user->setEmail($_POST['email']);
+            $user->setPassword(password_hash($_POST['password'], PASSWORD_BCRYPT));
+            $user->setFirstName($_POST['first_name']);
+            $user->setLastName($_POST['last_name']);
+
+            $validationErrors = $user->validate();
+            if (empty($validationErrors)) {
+                $userRepository->persist($user);
+                header('location: index.php?controller=auth&action=login');
+            } else {
+                $errors = $validationErrors;
+            }
+        }
+
+        $this->render('auth/register', [
+            'errors' => $errors,
+        ]);
     }
 }

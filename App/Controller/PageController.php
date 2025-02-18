@@ -15,6 +15,10 @@ class PageController extends Controller
                         //charger controleur home
                         $this->home();
                         break;
+                    case 'about':
+                        //charger controleur about
+                        $this->about();
+                        break;
                     default:
                         throw new \Exception("Cette action n'existe pas : ".$_GET['action']);
                         break;
@@ -41,6 +45,11 @@ class PageController extends Controller
             'test' => 555
         ]);
 
+    }
+
+    protected function about()
+    {
+        $this->render('page/about');
     }
 
 }

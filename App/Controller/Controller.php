@@ -23,6 +23,14 @@ class Controller
                         $controller = new UserController();
                         $controller->route();
                         break;
+                    case 'article':
+                        $controller = new ArticleController();
+                        $controller->route();
+                        break;
+                    case 'comment':
+                        $controller = new CommentController();
+                        $controller->route();
+                        break;
                     default:
                         throw new \Exception("Le controleur n'existe pas");
                         break;
